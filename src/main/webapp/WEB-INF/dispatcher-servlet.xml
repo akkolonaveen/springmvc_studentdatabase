@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<beans
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans">
+
+	<context:annotation-config />
+
+	<context:component-scan base-package="com.virtusa" />
+
+	<tx:annotation-driven
+		transaction-manager="transactionManager" />
+
+
+	
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+		<property value="/WEB-INF/views/" name="prefix" />
+
+		<property value=".jsp" name="suffix" />
+
+	</bean>
+
+
+	
+	<bean class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" id="dataSource">
+
+		<property value="com.mysql.jdbc.Driver"
+			name="driverClassName" />
+
+		<property value="jdbc:mysql://localhost:3306/employee"
+			name="url" />
+
+		<property value="root" name="username" />
+
+		<property value="root" name="password" />
+
+	</bean>
+
+
+	
+	<bean
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+		id="hibernate4AnnotatedSessionFactory">
+
+		<property name="dataSource" ref="dataSource" />
+
+
+		
+		<property name="annotatedClasses">
+
+
+			
+			<array>
+
+				<value>com.virtusa.entity.Student</value>
+
+			</array>
+
+		</property>
+
+
+		
+		<property name="hibernateProperties">
+
+
+			
+			<props>
+
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+
+				<prop key="hibernate.hbm2ddl.auto">validate</prop>
+
+				<prop key="hibernate.show_sql">true</prop>
+
+			</props>
+
+		</property>
+
+	</bean>
+
+
+	
+	<bean
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+		id="transactionManager">
+
+		<property name="sessionFactory"
+			ref="hibernate4AnnotatedSessionFactory" />
+
+	</bean>
+
+</beans>
